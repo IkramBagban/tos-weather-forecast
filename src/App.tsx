@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider, useLoaderData } from 'react-router'
-import { Render } from './views/Render'
-import { Settings } from './views/Settings'
+import Render from './views/Render'
+import Settings from './views/Settings'
 
 const router = createBrowserRouter([
   {
