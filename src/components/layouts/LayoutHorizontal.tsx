@@ -1,7 +1,7 @@
 import React from 'react';
 import { WeatherLayoutProps } from '../../types';
 import { getIcon } from '../../utils/weatherHelpers';
-import { LuWind, LuDroplets, LuThermometer, LuCloudRain } from 'react-icons/lu';
+import { LuWind, LuCloudRain } from 'react-icons/lu';
 import '../../views/Render.css';
 
 export const LayoutHorizontal: React.FC<WeatherLayoutProps> = ({
@@ -12,77 +12,151 @@ export const LayoutHorizontal: React.FC<WeatherLayoutProps> = ({
     currentTime,
     contentStyle
 }) => {
+    // 16:9 "Cinematic Timeline" Layout
+    // Left: Header Glass Card
+    // Right: Forecast Rail
+
     return (
-        <div className="render__content" style={contentStyle}>
-            {/* Header: Location + Date/Time */}
-            <header className="render__header glass-panel" style={{ padding: '2rem 1.5rem', minHeight: '15vmin' }}>
-                <div className="render__location">
-                    {locationName}
-                </div>
-                <div className="header-right" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.25rem' }}>
-                    <div className="time-display">{formatTime(currentTime)}</div>
-                    <div className="date-display">{formatDate(currentTime)}</div>
+        <div className="render__content" style={{
+            ...contentStyle,
+            flexDirection: 'row', // Horizontal layout
+            alignItems: 'stretch',
+            gap: '2rem',
+            padding: '2rem' // Generous padding
+        }}>
+            {/* 1. Header Glass Card (Far Left) */}
+            <header className="glass-bento" style={{
+                flex: '0 0 25%', // Fixed width for header
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center', // Center vertically
+                padding: '3rem',
+                textAlign: 'left'
+            }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+                    {/* Location Name - Huge */}
+                    <h1 style={{
+                        fontSize: '4.5rem', // 700 weight
+                        fontWeight: 700,
+                        lineHeight: 1.1,
+                        margin: 0,
+                        color: '#fff'
+                    }}>
+                        {locationName}
+                    </h1>
+
+                    <div style={{ width: '60px', height: '4px', background: 'rgba(255,255,255,0.3)', borderRadius: '2px' }}></div>
+
+                    {/* Time & Date */}
+                    <div>
+                        <div style={{ fontSize: '3.5rem', fontWeight: 700, color: '#fff', lineHeight: 1 }}>
+                            {formatTime(currentTime)}
+                        </div>
+                        <div style={{ fontSize: '1.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.7)', marginTop: '0.75rem' }}>
+                            {formatDate(currentTime)}
+                        </div>
+                    </div>
                 </div>
             </header>
 
-            {/* Forecast Columns */}
-            <div className="forecast-columns glass-panel">
-                {forecastData.map((item, i) => (
-                    <div key={i} className={`forecast-col ${i === 0 ? 'forecast-col--highlight' : ''}`}>
-                        {/* Day Label */}
-                        <div className="col-header">{item.label}</div>
-
-                        {/* Weather Icon */}
-                        <div className="col-icon">
-                            {getIcon(item.condition)}
-                        </div>
-
-                        {/* Condition Text */}
-                        <div className="col-condition">
-                            {item.condition}
-                        </div>
-
-                        {/* Temperature: High / Low */}
-                        <div className="col-temps">
-                            <div className="temp-high">{Math.round(item.tempHigh || item.temp)}°</div>
-                            {item.tempLow !== undefined && (
-                                <div className="temp-low">{Math.round(item.tempLow)}°</div>
-                            )}
-                        </div>
-
-                        {/* Secondary Data with Icons (PRD Requirement) */}
+            {/* 2. Forecast Rail (Right) - Flex container of identical bento cards */}
+            <div className="glass-bento" style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'row',
+                padding: '2rem', // Inner rail padding
+                gap: '1.5rem',
+                overflow: 'hidden' // Ensure clean cut
+            }}>
+                {forecastData.slice(0, 5).map((item, i) => (
+                    <div key={i} style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        position: 'relative',
+                        padding: '1rem 0.5rem'
+                    }}>
+                        {/* Anatomy Top: Day Name (Huge & Bold) */}
                         <div style={{
-                            marginTop: 'auto',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.5rem',
-                            width: '100%',
-                            paddingTop: '1rem',
-                            borderTop: '1px solid rgba(255,255,255,0.05)'
+                            fontSize: '2rem',
+                            fontWeight: 700,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em',
+                            color: '#fff',
+                            marginBottom: '1rem'
                         }}>
-                            {/* Feels Like */}
-                            {item.feelsLike && (
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                    <LuThermometer size={14} color="var(--accent-sun)" />
-                                    <span>{Math.round(item.feelsLike)}°</span>
-                                </div>
-                            )}
-                            {/* Humidity */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                <LuDroplets size={14} color="var(--accent-rain)" />
-                                <span>{item.humidity || 0}%</span>
+                            {item.label}
+                        </div>
+
+                        {/* Middle: Icon + Temp Stack */}
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+                            {/* Icon */}
+                            <div style={{ fontSize: '7rem', filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.3))' }}>
+                                {getIcon(item.condition)}
+                            </div>
+
+                            {/* Temp Stack (High Bold / Low Small) */}
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1 }}>
+                                <span style={{ fontSize: '4rem', fontWeight: 800, color: '#fff' }}>
+                                    {Math.round(item.tempHigh || item.temp)}°
+                                </span>
+                                {item.tempLow !== undefined && (
+                                    <span style={{ fontSize: '2rem', fontWeight: 700, color: 'rgba(255,255,255,0.6)', marginTop: '0.25rem' }}>
+                                        {Math.round(item.tempLow)}°
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Condition Text (Tier 2) */}
+                            <div style={{
+                                fontSize: '1.2rem',
+                                fontWeight: 500,
+                                color: 'rgba(255,255,255,0.9)',
+                                marginTop: '0.5rem',
+                                maxWidth: '90%',
+                                lineHeight: 1.2
+                            }}>
+                                {item.condition}
+                            </div>
+                        </div>
+
+                        {/* Footer: Micro-Metrics (Tier 3) */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '1.5rem',
+                            marginTop: '2rem',
+                            paddingTop: '1rem',
+                            borderTop: '1px solid rgba(255,255,255,0.1)',
+                            width: '100%',
+                            justifyContent: 'center'
+                        }}>
+                            {/* Precip */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', opacity: 0.8 }}>
+                                <LuCloudRain size={20} color="#fff" />
+                                <span style={{ fontSize: '1rem', fontWeight: 500, color: '#fff' }}>{item.precip || item.pop || 0}%</span>
                             </div>
                             {/* Wind */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                <LuWind size={14} color="var(--accent-cloud)" />
-                                <span>{item.wind || 0}</span>
-                            </div>
-                            {/* Precipitation Chance */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                <LuCloudRain size={14} color="var(--accent-rain)" />
-                                <span>{item.precip || item.pop || 0}%</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', opacity: 0.8 }}>
+                                <LuWind size={20} color="#fff" />
+                                <span style={{ fontSize: '1rem', fontWeight: 500, color: '#fff' }}>{item.wind}</span>
                             </div>
                         </div>
+
+                        {/* Divider for all but last */}
+                        {i < 4 && (
+                            <div style={{
+                                position: 'absolute',
+                                right: '-0.75rem',
+                                top: '10%',
+                                bottom: '10%',
+                                width: '1px',
+                                background: 'rgba(255,255,255,0.1)'
+                            }} />
+                        )}
                     </div>
                 ))}
             </div>

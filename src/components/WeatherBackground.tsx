@@ -26,11 +26,32 @@ export const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
         return getDynamicBackground(currentCondition, forecastData);
     }, [currentCondition, forecastData]);
 
-    // Determine target image based on condition
+    // Determine target image based on "Overall Vibe" of the forecast period
+    // "If 5 out of 7 days are rainy, use a moody rain background"
     const mappedImage = useMemo(() => {
-        let cond = currentCondition;
-        if (!cond && forecastData.length > 0) cond = forecastData[0].condition;
-        return getWeatherBackgroundImage(cond || '');
+        let targetCondition = currentCondition;
+
+        if (forecastData && forecastData.length > 0) {
+            const counts: Record<string, number> = {};
+            forecastData.forEach(item => {
+                const c = item.condition;
+                if (c) counts[c] = (counts[c] || 0) + 1;
+            });
+
+            let dominant = '';
+            let maxCount = 0;
+            for (const c in counts) {
+                if (counts[c] > maxCount) {
+                    maxCount = counts[c];
+                    dominant = c;
+                }
+            }
+
+            // Use dominant condition if found, effectively setting the "vibe"
+            if (dominant) targetCondition = dominant;
+        }
+
+        return getWeatherBackgroundImage(targetCondition || '');
     }, [currentCondition, forecastData]);
 
     // Effect: Try to load the image when it changes
@@ -89,5 +110,8 @@ export const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
         ? { ...commonStyle, backgroundImage: `url(${mappedImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }
         : { ...commonStyle, background: dynamicGradient };
 
-    return <div style={finalStyle} />;
+    // Apply animation class only if it's an image background (mapped or user uploaded image)
+    const animClass = (bgType === 'image' && !isVideo(bgUrl)) || (imageLoaded && mappedImage) ? 'ken-burns-anim' : '';
+
+    return <div className={animClass} style={finalStyle} />;
 };

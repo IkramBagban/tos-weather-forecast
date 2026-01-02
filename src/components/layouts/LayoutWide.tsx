@@ -1,8 +1,12 @@
 import React from 'react';
 import { WeatherLayoutProps } from '../../types';
 import { getIcon } from '../../utils/weatherHelpers';
-import { LuMap, LuNavigation, LuCalendar } from 'react-icons/lu';
 import '../../views/Render.css';
+
+// Extreme Vertical Ribbons (e.g. 5:1 Aspect Ratio)
+// Strategy: "Tight Glass Pills"
+// Drop Tier 2 (Condition Text) and Tier 3 (Metrics) completely.
+// Only show: Day Name, Icon, Temp (Center)
 
 export const LayoutWide: React.FC<WeatherLayoutProps> = ({
     forecastData,
@@ -13,70 +17,68 @@ export const LayoutWide: React.FC<WeatherLayoutProps> = ({
     contentStyle
 }) => {
     return (
-        <div className="render__content" style={{ ...contentStyle, flexDirection: 'row', padding: '0', gap: 0 }}>
-
-            {/* Sidebar info */}
-            <div style={{
-                width: '18%',
-                background: 'rgba(9, 9, 11, 0.4)',
-                borderRight: '1px solid rgba(255,255,255,0.1)',
-                padding: '2rem',
+        <div className="render__content" style={{
+            ...contentStyle,
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: '1rem 2rem', // Reduced padding for ribbon
+            gap: '2rem'
+        }}>
+            {/* Header: Compact Ribbon Block */}
+            <header className="glass-bento" style={{
+                flex: '0 0 20%',
                 display: 'flex',
-                flexDirection: 'column',
+                flexDirection: 'row',
+                alignItems: 'center',
                 justifyContent: 'space-between',
-                zIndex: 10
+                padding: '1rem 2rem',
+                height: '100%'
             }}>
                 <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-                        <LuNavigation size={20} />
-                        <span style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.1em' }}>LOCATION</span>
-                    </div>
-                    <h2 style={{ fontSize: '2.5rem', fontWeight: 600, color: '#fff', lineHeight: 1.1, wordWrap: 'break-word' }}>
+                    <h1 style={{ fontSize: '2.5rem', fontWeight: 700, margin: 0, lineHeight: 1, color: '#fff' }}>
                         {locationName}
-                    </h2>
+                    </h1>
+                    <div style={{ fontSize: '1.2rem', opacity: 0.7, marginTop: '0.2rem' }}>
+                        {formatDate(currentTime)}
+                    </div>
                 </div>
-
-                <div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '0.5rem', letterSpacing: '0.1em' }}>Forecast</div>
-                    <div style={{ fontSize: '2rem', fontWeight: 500 }}>5 Days</div>
-                    <div style={{ marginTop: '0.5rem', fontSize: '1rem', color: 'var(--text-tertiary)' }}>{formatDate(currentTime)}</div>
+                <div style={{ fontSize: '2.5rem', fontWeight: 600, color: '#fff' }}>
+                    {formatTime(currentTime)}
                 </div>
-            </div>
+            </header>
 
-            {/* Timeline Grid */}
-            <div style={{ flex: 1, display: 'grid', gridTemplateColumns: `repeat(${forecastData.length}, 1fr)`, position: 'relative' }}>
-                {/* Background Grid Lines handled by flex/grid gap or borders */}
-
+            {/* Forecast Rail: Tight Pills */}
+            <div style={{
+                flex: 1,
+                display: 'flex',
+                gap: '1rem',
+                height: '100%',
+                alignItems: 'stretch'
+            }}>
                 {forecastData.map((item, i) => (
-                    <div key={i} style={{
-                        position: 'relative',
+                    <div key={i} className="glass-bento" style={{
+                        flex: 1,
                         display: 'flex',
-                        flexDirection: 'column',
+                        flexDirection: 'column', // Stack vertically for tight pill
                         alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '2.5rem 1rem',
-                        borderRight: '1px solid rgba(255,255,255,0.05)',
-                        background: i === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
-                        transition: 'background 0.3s'
+                        justifyContent: 'center',
+                        padding: '0.5rem',
+                        gap: '0.5rem',
+                        background: 'rgba(255,255,255,0.05)' // Slightly more transparent
                     }}>
-                        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: i === 0 ? '#fff' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        {/* Day */}
+                        <div style={{ fontSize: '1.2rem', fontWeight: 700, textTransform: 'uppercase', color: 'rgba(255,255,255,0.8)' }}>
                             {item.label}
-                        </span>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                            <div style={{ fontSize: '3.5rem', filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.3))' }}>
-                                {getIcon(item.condition)}
-                            </div>
-                            {i === 0 && (
-                                <span style={{ fontSize: '0.75rem', padding: '2px 8px', background: 'rgba(251, 191, 36, 0.1)', color: '#fbbf24', borderRadius: '12px', fontWeight: 600 }}>
-                                    {item.condition}
-                                </span>
-                            )}
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <span style={{ fontSize: '2.5rem', fontWeight: 600, lineHeight: 1, letterSpacing: '-0.02em' }}>{Math.round(item.temp)}°</span>
-                            <span style={{ fontSize: '1.25rem', color: 'var(--text-tertiary)', marginTop: '0.25rem' }}>{Math.round(item.feelsLike || item.temp - 5)}°</span>
+                        {/* Icon */}
+                        <div style={{ fontSize: '3.5rem', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.3))' }}>
+                            {getIcon(item.condition)}
+                        </div>
+
+                        {/* Temp */}
+                        <div style={{ fontSize: '2rem', fontWeight: 800, color: '#fff' }}>
+                            {Math.round(item.tempHigh || item.temp)}°
                         </div>
                     </div>
                 ))}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { WeatherLayoutProps } from '../../types';
 import { getIcon } from '../../utils/weatherHelpers';
-import { LuWind, LuDroplets, LuMapPin, LuCalendar } from 'react-icons/lu';
+import { LuWind, LuCloudRain } from 'react-icons/lu';
 import '../../views/Render.css';
 
 export const LayoutVertical: React.FC<WeatherLayoutProps> = ({
@@ -12,103 +12,142 @@ export const LayoutVertical: React.FC<WeatherLayoutProps> = ({
     currentTime,
     contentStyle
 }) => {
-    // vertical-layout specific overrides
-    const verticalContainerStyle: React.CSSProperties = {
-        ...contentStyle,
-        overflowY: 'hidden',
-        padding: '0'
-    };
-
-    const highlightItem = forecastData[0]; // Usually Tomorrow/Next
-    const upcoming = forecastData.slice(1, 6); // Next 5 days
+    // 9:16 / 4:3 "Vertical Stack" Layout
+    // Header Glass Card at Top
+    // Stack of Wide Horizontal Glass Cards
 
     return (
-        <div className="render__content" style={verticalContainerStyle}>
-            {/* Header Area */}
-            <header style={{ padding: '2rem 2rem 1rem 2rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                    <LuMapPin size={24} color="#a1a1aa" />
-                    <h2 style={{ fontSize: '2.5rem', fontWeight: 600, margin: 0, lineHeight: 1.1, letterSpacing: '-0.02em' }}>{locationName}</h2>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: '0.25rem' }}>
-                    <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '1.1rem', fontWeight: 500 }}>Upcoming 5 Days</p>
-                    <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '1.25rem', fontWeight: 500 }}>{formatTime(currentTime)}</div>
+        <div className="render__content" style={{
+            ...contentStyle,
+            flexDirection: 'column',
+            gap: '1.5rem',
+            padding: '2rem',
+            overflow: 'hidden'
+        }}>
+            {/* 1. Header Glass Card (Top) */}
+            <header className="glass-bento" style={{
+                padding: '2rem 2.5rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexShrink: 0
+            }}>
+                <div>
+                    <h1 style={{
+                        fontSize: '3.5rem',
+                        fontWeight: 700,
+                        lineHeight: 1,
+                        margin: 0,
+                        color: '#fff',
+                        letterSpacing: '-0.02em'
+                    }}>
+                        {locationName}
+                    </h1>
+                    <div style={{
+                        fontSize: '1.5rem',
+                        fontWeight: 500,
+                        color: 'rgba(255,255,255,0.7)',
+                        marginTop: '0.5rem'
+                    }}>
+                        {formatDate(currentTime)}
                     </div>
+                </div>
+                {/* Time centered vertically on right */}
+                <div style={{
+                    fontSize: '4rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    lineHeight: 1
+                }}>
+                    {formatTime(currentTime)}
                 </div>
             </header>
 
-            {/* Hero Card (Highlighted) */}
-            <div style={{ padding: '0 2rem 1.5rem 2rem' }}>
-                <div className="glass-panel bg-gradient-rain" style={{
-                    padding: '2rem',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
-                }}>
-                    {/* Decorative Icon BG */}
-                    <div style={{ position: 'absolute', top: -10, right: -10, opacity: 0.1, transform: 'scale(1.5)', pointerEvents: 'none' }}>
-                        {getIcon(highlightItem.condition)}
-                    </div>
-
-                    <div style={{ position: 'relative', zIndex: 10 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div>
-                                <span style={{ textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.1em', fontWeight: 600, color: 'rgba(255,255,255,0.9)' }}>
-                                    {highlightItem.label}
-                                </span>
-                                <div style={{ fontSize: '5.5rem', fontWeight: 600, lineHeight: 0.9, marginTop: '0.75rem', marginBottom: '0.5rem', letterSpacing: '-0.04em' }}>
-                                    {Math.round(highlightItem.temp)}°
-                                </div>
-                                <div style={{ fontSize: '1.5rem', fontWeight: 500 }}>{highlightItem.condition}</div>
-                            </div>
-                            <div style={{ fontSize: '6rem', filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.2))' }}>
-                                {getIcon(highlightItem.condition)}
-                            </div>
-                        </div>
-
-                        {/* Metrics Grid inside Hero */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.2)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <LuDroplets size={20} color="rgba(255,255,255,0.8)" />
-                                <div>
-                                    <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '2px' }}>Precip</span>
-                                    <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>{highlightItem.precip || highlightItem.pop || 0}%</span>
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <LuWind size={20} color="rgba(255,255,255,0.8)" />
-                                <div>
-                                    <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '2px' }}>Wind</span>
-                                    <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>{highlightItem.wind}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* List for Upcoming */}
-            <div style={{ flex: 1, overflow: 'hidden', padding: '0 2rem 2rem 2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {upcoming.map((item, i) => (
-                    <div key={i} className="glass-panel" style={{
-                        padding: '1.25rem 1.5rem',
+            {/* 2. Vertical Stack of Wide Cards */}
+            <div style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+                overflowY: 'hidden' // Or auto if scrolling needed, but usually fixed for signage
+            }}>
+                {forecastData.slice(0, 6).map((item, i) => (
+                    <div key={i} className="glass-bento" style={{
+                        flex: 1,
                         display: 'flex',
+                        flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        borderRadius: '16px',
-                        background: 'rgba(24, 24, 27, 0.4)',
-                        border: '1px solid rgba(255,255,255,0.05)'
+                        padding: '0 2.5rem',
+                        gap: '2rem'
                     }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                            <div style={{ width: '3.5rem', textAlign: 'center', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '1rem', textTransform: 'uppercase' }}>{item.label.substring(0, 3)}</div>
-                            <div style={{ fontSize: '2rem' }}>{getIcon(item.condition)}</div>
-                            <div style={{ fontSize: '1.1rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>{item.condition}</div>
+                        {/* Left: Day Name */}
+                        <div style={{ flex: '0 0 15%', textAlign: 'left' }}>
+                            <div style={{
+                                fontSize: '2rem',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                color: '#fff',
+                                letterSpacing: '0.05em'
+                            }}>
+                                {item.label.substring(0, 3)}
+                            </div>
                         </div>
-                        <div style={{ display: 'flex', gap: '1.5rem', fontWeight: 500, alignItems: 'center' }}>
-                            <span style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 600 }}>{Math.round(item.temp)}°</span>
-                            <span style={{ color: 'var(--text-tertiary)', fontSize: '1.25rem' }}>{item.feelsLike ? Math.round(item.feelsLike) : Math.round(item.temp - 5)}°</span>
+
+                        {/* Center: Icon + Temp Stack (Horizontal Cluster) */}
+                        <div style={{
+                            flex: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-start', // Align left-center
+                            gap: '3rem'
+                        }}>
+                            <div style={{ fontSize: '5rem', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}>
+                                {getIcon(item.condition)}
+                            </div>
+
+                            {/* Temp Stack */}
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '1rem' }}>
+                                <span style={{ fontSize: '4.5rem', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
+                                    {Math.round(item.tempHigh || item.temp)}°
+                                </span>
+                                {item.tempLow !== undefined && (
+                                    <span style={{ fontSize: '2.5rem', fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>
+                                        / {Math.round(item.tempLow)}°
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Right: Vertical Stack of Secondary Data */}
+                        <div style={{
+                            flex: '0 0 25%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-end',
+                            gap: '0.4rem',
+                            textAlign: 'right'
+                        }}>
+                            <div style={{
+                                fontSize: '1.1rem',
+                                fontWeight: 500,
+                                color: 'rgba(255,255,255,0.9)',
+                                marginBottom: '0.2rem'
+                            }}>
+                                {item.condition}
+                            </div>
+
+                            {/* Metrics Row */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.8 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                    <LuCloudRain size={16} color="#fff" />
+                                    <span style={{ fontSize: '0.9rem', color: '#fff' }}>{item.precip || item.pop || 0}%</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                    <LuWind size={16} color="#fff" />
+                                    <span style={{ fontSize: '0.9rem', color: '#fff' }}>{item.wind}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
