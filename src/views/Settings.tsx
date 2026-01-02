@@ -25,6 +25,7 @@ import {
   useBackgroundColorState,
   useBackgroundUrlState,
   useBackgroundOpacityState,
+  useGlassOpacityState,
   useFontColorState,
   useUnitState,
   useTimeFormatState,
@@ -44,6 +45,7 @@ export default function Settings() {
   const [isLoadingBgColor, backgroundColor, setBackgroundColor] = useBackgroundColorState(5);
   const [isLoadingBgUrl, backgroundUrl, setBackgroundUrl] = useBackgroundUrlState();
   const [isLoadingOpacity, backgroundOpacity, setBackgroundOpacity] = useBackgroundOpacityState(5);
+  const [isLoadingGlassOpacity, glassOpacity, setGlassOpacity] = useGlassOpacityState(5);
   const [isLoadingFontColor, fontColor, setFontColor] = useFontColorState(5);
 
   const [isLoadingUnit, unit, setUnit] = useUnitState();
@@ -55,7 +57,7 @@ export default function Settings() {
   const isLoading =
     isLoadingLocations || isLoadingDuration || isLoadingTransition ||
     isLoadingRange || isLoadingBgType || isLoadingBgColor || isLoadingBgUrl ||
-    isLoadingOpacity || isLoadingFontColor || isLoadingUnit ||
+    isLoadingOpacity || isLoadingGlassOpacity || isLoadingFontColor || isLoadingUnit ||
     isLoadingTime || isLoadingDate || isLoadingScale;
 
   // Location Handlers
@@ -310,6 +312,21 @@ export default function Settings() {
             disabled={isLoading}
           />
           <span>{backgroundOpacity}%</span>
+        </SettingsSliderFrame>
+      </SettingsField>
+
+      <SettingsField>
+        <SettingsLabel>Glass Opacity</SettingsLabel>
+        <SettingsSliderFrame>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={glassOpacity}
+            onChange={(e) => setGlassOpacity(Number(e.target.value))}
+            disabled={isLoading}
+          />
+          <span>{glassOpacity}%</span>
         </SettingsSliderFrame>
       </SettingsField>
 

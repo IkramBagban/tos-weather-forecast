@@ -24,6 +24,7 @@ export const useBackgroundTypeState = createUseInstanceStoreState<string>('backg
 export const useBackgroundColorState = createUseInstanceStoreState<string>('backgroundColor', '#1a1a1a');
 export const useBackgroundUrlState = createUseInstanceStoreState<string>('backgroundUrl', '');
 export const useBackgroundOpacityState = createUseInstanceStoreState<number>('backgroundOpacity', 80);
+export const useGlassOpacityState = createUseInstanceStoreState<number>('glassOpacity', 65); // Default 65%
 export const useFontColorState = createUseInstanceStoreState<string>('fontColor', '#ffffff');
 
 // Units & Formats
