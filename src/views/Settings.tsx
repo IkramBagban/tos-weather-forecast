@@ -1,5 +1,5 @@
-import React from 'react';
-import { media, store } from '@telemetryos/sdk'; // Check if store is needed or just type import
+import React, { useState } from 'react'; // Added useState import
+import { media, store } from '@telemetryos/sdk';
 import {
   SettingsContainer,
   SettingsHeading,
@@ -33,6 +33,7 @@ import {
   useUiScaleStoreState,
   LocationConfig,
 } from '../hooks/store';
+import { MediaPicker } from '../components/MediaPicker';
 
 export default function Settings() {
   const [isLoadingLocations, locations, setLocations] = useLocationsState();
@@ -53,6 +54,9 @@ export default function Settings() {
 
   const [isLoadingDate, dateFormat, setDateFormat] = useDateFormatState();
   const [isLoadingScale, uiScale, setUiScale] = useUiScaleStoreState();
+
+  // Local state for Media Picker Modal
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const isLoading =
     isLoadingLocations || isLoadingDuration || isLoadingTransition ||
@@ -83,18 +87,16 @@ export default function Settings() {
     setLocations(newLocations);
   };
 
-  const pickMedia = async () => {
-    try {
-      // @ts-ignore - SDK typings might not be fully up to date for 'pick' or return type
-      const result = await media().pick();
-      if (result && result.url) {
-        setBackgroundUrl(result.url);
-      } else if (typeof result === 'string') {
-        setBackgroundUrl(result);
-      }
-    } catch (e) {
-      console.error('Media picker failed', e);
+  // Replaced undocumented media().pick() with custom picker
+  const pickMedia = () => {
+    setIsPickerOpen(true);
+  };
+
+  const handleMediaSelect = (url: string) => {
+    if (url) {
+      setBackgroundUrl(url);
     }
+    setIsPickerOpen(false);
   };
 
   return (
@@ -401,6 +403,11 @@ export default function Settings() {
           </select>
         </SettingsSelectFrame>
       </SettingsField>
+
+      {/* Media Picker Modal */}
+      {isPickerOpen && (
+        <MediaPicker onSelect={handleMediaSelect} onClose={() => setIsPickerOpen(false)} />
+      )}
 
     </SettingsContainer>
   );
