@@ -1,7 +1,7 @@
 import React from 'react';
 import { WeatherLayoutProps } from '../../types';
 import { getIcon } from '../../utils/weatherHelpers';
-import { LuWind, LuDroplets, LuMapPin, LuCalendar } from 'react-icons/lu';
+import { Wind, Droplets, MapPin, Calendar } from 'lucide-react';
 import '../../views/Render.css';
 
 export const LayoutVertical: React.FC<WeatherLayoutProps> = ({
@@ -27,7 +27,7 @@ export const LayoutVertical: React.FC<WeatherLayoutProps> = ({
             {/* Header Area */}
             <header style={{ padding: '2rem 2rem 1rem 2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                    <LuMapPin size={24} color="#a1a1aa" />
+                    <MapPin size={24} color="#a1a1aa" />
                     <h2 style={{ fontSize: '2.5rem', fontWeight: 600, margin: 0, lineHeight: 1.1, letterSpacing: '-0.02em' }}>{locationName}</h2>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', paddingLeft: '0.25rem' }}>
@@ -71,14 +71,14 @@ export const LayoutVertical: React.FC<WeatherLayoutProps> = ({
                         {/* Metrics Grid inside Hero */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.2)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <LuDroplets size={20} color="rgba(255,255,255,0.8)" />
+                                <Droplets size={20} color="rgba(255,255,255,0.8)" />
                                 <div>
                                     <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '2px' }}>Precip</span>
                                     <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>{highlightItem.precip || highlightItem.pop || 0}%</span>
                                 </div>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <LuWind size={20} color="rgba(255,255,255,0.8)" />
+                                <Wind size={20} color="rgba(255,255,255,0.8)" />
                                 <div>
                                     <span style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '2px' }}>Wind</span>
                                     <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>{highlightItem.wind}</span>

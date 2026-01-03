@@ -227,7 +227,7 @@ export default function Settings() {
               <option value="24h">Next 24 Hours</option>
             </optgroup>
             <optgroup label="Daily">
-              <option value="2d">2-Day Forecast</option>
+              {/* <option value="2d">2-Day Forecast</option> */}
               <option value="3d">3-Day Forecast</option>
               <option value="5d">5-Day Forecast</option>
               <option value="7d">7-Day Forecast</option>

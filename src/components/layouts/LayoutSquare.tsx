@@ -1,7 +1,7 @@
 import React from 'react';
 import { WeatherLayoutProps } from '../../types';
 import { getIcon } from '../../utils/weatherHelpers';
-import { LuWind, LuDroplets, LuMapPin, LuCalendar } from 'react-icons/lu';
+import { Wind, Droplets, MapPin, Calendar } from 'lucide-react';
 import '../../views/Render.css';
 
 export const LayoutSquare: React.FC<WeatherLayoutProps> = ({
@@ -56,14 +56,14 @@ export const LayoutSquare: React.FC<WeatherLayoutProps> = ({
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div className="glass-panel" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                                <LuDroplets size={16} />
+                                <Droplets size={16} />
                                 <span style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Precip</span>
                             </div>
                             <span style={{ fontSize: '1.5rem', fontWeight: 500 }}>{highlightItem.precip || highlightItem.pop || 0}%</span>
                         </div>
                         <div className="glass-panel" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
-                                <LuWind size={16} />
+                                <Wind size={16} />
                                 <span style={{ fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>Wind</span>
                             </div>
                             <span style={{ fontSize: '1.5rem', fontWeight: 500 }}>

@@ -27,9 +27,16 @@ export const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
     }, [currentCondition, forecastData]);
 
     // Determine target image based on condition
+    // Determine target image based on condition
     const mappedImage = useMemo(() => {
-        let cond = currentCondition;
-        if (!cond && forecastData.length > 0) cond = forecastData[0].condition;
+        // User requested to map "accordingly with the first forecast weather condition"
+        // We prioritize the first forecast item (Today/Now), then fallback to currentCondition
+        let cond = '';
+        if (forecastData && forecastData.length > 0) {
+            cond = forecastData[0].condition;
+        } else {
+            cond = currentCondition;
+        }
         return getWeatherBackgroundImage(cond || '');
     }, [currentCondition, forecastData]);
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { WeatherLayoutProps } from '../../types';
 import { getIcon } from '../../utils/weatherHelpers';
-import { LuWind, LuDroplets, LuThermometer, LuCloudRain } from 'react-icons/lu';
+import { Wind, Droplets, Thermometer, CloudRain } from 'lucide-react';
 import '../../views/Render.css';
 
 export const LayoutHorizontal: React.FC<WeatherLayoutProps> = ({
@@ -63,23 +63,23 @@ export const LayoutHorizontal: React.FC<WeatherLayoutProps> = ({
                             {/* Feels Like */}
                             {item.feelsLike && (
                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                    <LuThermometer size={14} color="var(--accent-sun)" />
+                                    <Thermometer size={14} color="var(--accent-sun)" />
                                     <span>{Math.round(item.feelsLike)}°</span>
                                 </div>
                             )}
                             {/* Humidity */}
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                <LuDroplets size={14} color="var(--accent-rain)" />
+                                <Droplets size={14} color="var(--accent-rain)" />
                                 <span>{item.humidity || 0}%</span>
                             </div>
                             {/* Wind */}
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                <LuWind size={14} color="var(--accent-cloud)" />
+                                <Wind size={14} color="var(--accent-cloud)" />
                                 <span>{item.wind || 0}</span>
                             </div>
                             {/* Precipitation Chance */}
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1.5vmin', color: 'var(--text-secondary)' }}>
-                                <LuCloudRain size={14} color="var(--accent-rain)" />
+                                <CloudRain size={14} color="var(--accent-rain)" />
                                 <span>{item.precip || item.pop || 0}%</span>
                             </div>
                         </div>
